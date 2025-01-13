@@ -41,60 +41,27 @@ def registrar_produto(produto, valor):
     print(f"Produto '{produto}' com valor {valor} registrado com sucesso!")
 
 
+# Função para buscar o menor valor de um produto e Interface
 def buscar_menor_valor(produto):
     """Busca o menor valor registrado para um produto."""
-    wb = openpyxl.load_workbook(ARQUIVO_XLS)
-    ws = wb["Produtos"]
-    # Aqui já usamos diretamente row[1], pois `values_only=True` retorna os valores das células.
-    valores = [
-        row[1] for row in ws.iter_rows(min_row=2, values_only=True)
-        if row[0] and row[0].lower() == produto.lower()
-    ]
-    if valores:
-        menor_valor = min(valores)
-        print(f"O menor valor registrado para '{produto}' é: {menor_valor}")
-    else:
-        print(f"Produto '{produto}' não encontrado.")
-
-
-def menu():
-    """Menu principal do programa."""
-    criar_arquivo_xls()
-    while True:
-        print("\n1. Registrar produto")
-        print("2. Buscar menor valor de um produto")
-        print("3. Sair")
-        opcao = input("Escolha uma opção: ")
-
-        if opcao == "1":
-            produto = input("Informe o nome do produto: ")
-            valor = float(input("Informe o valor do produto: "))
-            registrar_produto(produto, valor)
-        elif opcao == "2":
-            produto = input("Informe o nome do produto para buscar: ")
-            buscar_menor_valor(produto)
-        elif opcao == "3":
-            print("Saindo do programa. Até mais!")
-            break
+    try:
+        wb = openpyxl.load_workbook(ARQUIVO_XLS)
+        ws = wb["Produtos"]
+        valores = [
+            row[1] for row in ws.iter_rows(min_row=2, values_only=True)
+            if row[0] and row[0].lower() == produto.lower()
+        ]
+        if valores:
+            menor_valor = min(valores)
+            return f"O menor valor registrado para '{produto}' é: R${menor_valor:.2f}"
         else:
-            print("Opção inválida! Tente novamente.")
+            return f"Produto '{produto}' não encontrado."
+    except FileNotFoundError:
+        return "Arquivo XLS não encontrado."
+    except Exception as e:
+        return f"Erro: {str(e)}"
 
-# Função para centralizar a janela
-def centralizar_janela(janela, largura, altura):
-    # Obtém a largura e altura da tela
-    largura_tela = janela.winfo_screenwidth()
-    altura_tela = janela.winfo_screenheight()
-
-    # Calcula a posição no centro
-    pos_x = int((largura_tela - largura) / 2)
-    pos_y = int((altura_tela - altura) / 2)
-
-    # Aplica a geometria para centralizar a janela
-    janela.geometry(f"{largura}x{altura}+{pos_x}+{pos_y}")
-
-
-
- # 1 Função para Consultar Produto
+# Funções da Interface Consultar Produto
 
 def consultar_produto_gui():
     janela.withdraw()  # Oculta a janela principal
@@ -107,11 +74,23 @@ def consultar_produto_gui():
         consultar_produto.destroy()  # Fecha a janela atual
         janela.deiconify()  # Reexibe a janela principal
 
+    def realizar_busca():
+        produto = entrada_consultarProduto.get()
+        resultado = buscar_menor_valor(produto)
+        label_consultarProduto.configure(text=resultado)  # Atualiza o texto da label
+
     # Widgets na nova janela
-    label_consultarProduto = ctk.CTkLabel(
-        consultar_produto, text="Consulta de Produto"
-    )
+    label_consultarProduto = ctk.CTkLabel(consultar_produto, text="Digite o nome do produto")
     label_consultarProduto.pack(pady=20)
+
+    entrada_consultarProduto = ctk.CTkEntry(consultar_produto, width=300, placeholder_text="Nome do Produto")
+    entrada_consultarProduto.pack(pady=10)
+
+    botao_buscarProduto = ctk.CTkButton(consultar_produto, text="Buscar", command=realizar_busca)
+    botao_buscarProduto.pack(pady=20)
+
+    label_resultadoConsultaProduto = ctk.CTkLabel(consultar_produto, text="", wraplength=300)
+    label_resultadoConsultaProduto.pack(pady=10)
 
     botao_voltar = ctk.CTkButton(
         consultar_produto, text="Inicio", command=home
@@ -119,14 +98,14 @@ def consultar_produto_gui():
     botao_voltar.pack(pady=20)
 
 
-# Botão para abrir a janela de consulta de produto
+
+# TELA PRINCIPAL
+
+# Botão para abrir a janela de consulta de produto 
 button_consultarProduto = ctk.CTkButton(
     janela, text="Consultar Produto", command=consultar_produto_gui
 )
 button_consultarProduto.pack(padx=20, pady=20)
-
-
-
 
 # Iniciar o loop principal da interface
 janela.mainloop()
