@@ -40,8 +40,20 @@ def registrar_produto(produto, valor):
     wb.save(ARQUIVO_XLS)
     print(f"Produto '{produto}' com valor {valor} registrado com sucesso!")
 
+    def registrar_produto_gui():
+        janela.withdraw
+        registrar_produtoo = ctk.CTkToplevel()
+        registrar_produtoo.title("Cadastrar Produtos")
+        registrar_produtoo.geometry("400x300")
+
+        def homepage():
+            registrar_produtoo.destroy()
+            janela.deiconify
+        
+
 
 # Função para buscar o menor valor de um produto e Interface
+
 def buscar_menor_valor(produto):
     """Busca o menor valor registrado para um produto."""
     try:
@@ -67,7 +79,7 @@ def consultar_produto_gui():
     janela.withdraw()  # Oculta a janela principal
     consultar_produto = ctk.CTkToplevel()  # Cria a nova janela
     consultar_produto.title("Consultar Produto")
-    consultar_produto.geometry("400x400")
+    consultar_produto.geometry("400x300")
 
     # Função para voltar para a tela principal
     def home():
@@ -101,11 +113,16 @@ def consultar_produto_gui():
 
 # TELA PRINCIPAL
 
-# Botão para abrir a janela de consulta de produto 
-button_consultarProduto = ctk.CTkButton(
+# Botão para abrir a janela de Consulta de Produto 
+botao_consultarProduto = ctk.CTkButton(
     janela, text="Consultar Produto", command=consultar_produto_gui
 )
-button_consultarProduto.pack(padx=20, pady=20)
+botao_consultarProduto.pack(padx=20, pady=20)
+
+# Janela para abrir a Janela de Cadastro de Produto
+botao_cadastrarProduto = ctk.CTkButton(janela, text="Cadastrar Produto", command=registrar_produto)
+botao_cadastrarProduto.pack(padx=20, pady=20)
+
 
 # Iniciar o loop principal da interface
 janela.mainloop()
