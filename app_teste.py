@@ -32,6 +32,8 @@ def criar_arquivo_xls():
         print(f"Arquivo {ARQUIVO_XLS} criado com sucesso!")
 
 
+# Função para buscar o menor valor de um produto e Interface
+
 def registrar_produto(produto, valor):
     """Registra um produto e valor no arquivo XLS."""
     wb = openpyxl.load_workbook(ARQUIVO_XLS)
@@ -46,9 +48,13 @@ def registrar_produto(produto, valor):
         registrar_produtoo.title("Cadastrar Produtos")
         registrar_produtoo.geometry("400x300")
 
+        # Função para voltar para a Janela Principal
         def homepage():
-            registrar_produtoo.destroy()
-            janela.deiconify
+            registrar_produtoo.destroy() # Fechar a janela atual
+            janela.deiconify() # Reexibir a Janela principal
+
+        def registrar_produto_func():
+            
         
 
 
@@ -81,7 +87,7 @@ def consultar_produto_gui():
     consultar_produto.title("Consultar Produto")
     consultar_produto.geometry("400x300")
 
-    # Função para voltar para a tela principal
+    # Função para voltar para a Janela principal
     def home():
         consultar_produto.destroy()  # Fecha a janela atual
         janela.deiconify()  # Reexibe a janela principal
